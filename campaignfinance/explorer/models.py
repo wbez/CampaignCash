@@ -1,8 +1,19 @@
 from django.db import models
+from django.db.models import Sum
+from django.utils.text import slugify
 
 class Race(models.Model):
     name = models.CharField(max_length=128, unique=True)
     ward = models.IntegerField(max_length=2, unique=True)
+    slug = models.SlugField()
+
+    def get_absolute_url(self):
+    	from django.core.urlresolvers import reverse
+    	return reverse('explorer.views.race', args=[str(self.slug),str(self.id)])
+
+    def save(self, *args, **kwargs):
+    	self.slug = slugify(unicode(self.name))
+    	super(Race, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.name
@@ -12,17 +23,36 @@ class AppCandidate(models.Model):
 	nameFirst = models.CharField(max_length=128, unique=True)
 	nameLast = models.CharField(max_length=128, unique=True)
 	incumbant = models.BooleanField(default=False)
+	slug = models.SlugField()
+
+	def save(self, *args, **kwargs):
+		slugvalue = '%s %s' % (self.nameFirst, self.nameLast)
+		self.slug = slugify(unicode(slugvalue))
+		super(AppCandidate, self).save(*args, **kwargs)
+
+	def _get_all_contributions(self):
+		"Returns the sum of contributions for this candidate"
+		total = Receipts.objects.filter(committeeid__candidate=self.id).aggregate(Sum('amount'))
+		return total['amount__sum']
+	sum_contributions = property(_get_all_contributions)
 
 	def __unicode__(self):
 		return '%s %s' % (self.nameFirst, self.nameLast)
 
 class AppCommittee(models.Model):
 	committeeid = models.IntegerField(primary_key=True)
+	name = models.CharField(max_length=128, unique=True)
 	candidate = models.ForeignKey(AppCandidate)
+	slug = models.SlugField()
+
+	def save(self, *args, **kwargs):
+		self.slug = slugify(unicode(self.name))
+		super(AppCommittee, self).save(*args, **kwargs)
 
 	def _get_all_contributions(self):
 		"Returns the sum of contributions for this committee"
-		return self.receipts_set.aggregate(Sum('amount'))
+		total = self.receipts_set.aggregate(Sum('amount'))
+		return total['amount__sum']
 	sum_contributions = property(_get_all_contributions)
 
 	def __unicode__(self):

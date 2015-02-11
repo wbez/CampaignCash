@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -8,8 +9,10 @@
 
     <!-- Bootstrap -->
     <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Roboto|Open+Sans' rel='stylesheet' type='text/css'>
+    
+    <link rel="stylesheet" type="text/css" href="{% static "explorer.css" %}">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -24,16 +27,14 @@
     }
 
     .hightlight {
-      background-color: #333;
-    }
+      background-color: #333    }
 
     .chart div {
-      font: 10px sans-serif;
-      background-color: steelblue;
-      text-align: right;
-      padding: 3px;
+      background-color: #B3DDF2;
+      text-align: left;
       margin: 1px;
-      color: white;
+      color: #333;
+      height:20px;
     }
 
     </style>
@@ -57,6 +58,7 @@
         </g>
         </svg>
       </a>
+      Campaign Finance Home
     </header>
     <div class="container">
       {% block content %}{% endblock %}

@@ -4,8 +4,9 @@ from explorer.models import Receipts,Race,AppCandidate,AppCommittee
 
 
 def index(request):
-	race_list = Race.objects.filter(ward__lt=6)
-	context_dict = {'races': race_list}
+	race_list = Race.objects.filter(ward__gt=0)
+	mayor = Race.objects.get(ward=0)
+	context_dict = {'races': race_list,'mayor': mayor}
 
 	return render(request, 'explorer/index.html', context_dict)
 

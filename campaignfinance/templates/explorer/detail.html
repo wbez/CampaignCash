@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-
-	<h3>{{ candidate}} Campaign Contributions</h3>
+	{% for race in candidate.race_set %}
+	<small>{{ race.get_absolute_url }}</small>
+	{% endfor %}
+	<h3>{{ candidate }} Campaign Contributions</h3>
 	<div class="center-block text-center visible-xs"><a id="read" href="#z"><span class="glyphicon glyphicon-chevron-up"></span></a></div>
 	<div class="desc hidden-xs">
 

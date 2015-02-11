@@ -1,44 +1,42 @@
 {% extends 'base.html' %}
 {% load humanize %}
+{% load mathfilters %}
 
 {% block content %}
     <h1>Campaign Finance Explorer</h1>
-    <p>There's a lot of money in Chicago politics (and it's not all Rahm Emanuel's).</p>
-    <p>Check the list of all 51 mayoral and aldermanic races below to see how the candidates stack up (or don't in some cases). Click on a race or a candidate to dig deeper into how their campaigns are financed.</p>
-        {% if races %}
-            {% for race in races %}
-            <hr>
-            <div class="row">
-                <div class="col-sm-3">
-                    <h3><a href="race/{{race.ward}}">{{ race.name }}</a></h3>
+    <p>There's a lot of money in Chicago politics (and it's not all Rahm Emanuel's*).</p>
+    <p>See the updated totals for all the Chicago Mayoral candidates below. Then check the list of all 50 aldermanic races to see how the candidates stack up (or don't in some cases). Click on a race or a candidate to dig deeper into how their campaigns are financed.</p>
+    <small>*Most of it is, though</small>
+    <hr>
+    <div class="row">
+        <div class="col-sm-12">
+            <h2><a href="">{{mayor.name}}</a></h2>
+            {% for candidate in mayor.appcandidate_set.all %}
+                <div class="row">
+                    <div class="col-sm-4">
+                        <span class="candidate"><a href="../../candidate/{{candidate.id}}">{{ candidate }}</a></span>
+                        <span class="pull-right money">${{ candidate.sum_contributions|floatformat:"2"|intcomma }}</span>
+                    </div>
+                    <div class="col-sm-8 chart">
+                        <div style="width: {% widthratio candidate.sum_contributions mayor.max_contributions 100 %}%;"></div>    
+                    </div>
                 </div>
-                <div class="col-sm-3">
-                    {% for candidate in race.appcandidate_set.all %}
-                        <li>
-                            <a href="../../candidate/{{candidate.id}}">{{ candidate }}</a>: 
-                            <span class="pull-right">
-                            {% if candidate.sum_contributions != None %}
-                                ${{ candidate.sum_contributions|floatformat:2|intcomma }}
-                            {% else %}
-                                None reported
-                            {% endif %}
-                            </span>
-                        </li>
-                    {% endfor %}
-                </div>
-                <div class="col-sm-6 chart">
-                    {% for candidate in race.appcandidate_set.all %}
-                        {% if candidate.sum_contributions != None %}
-                            <div style="width: 25%;">{{candidate.sum_contributions}}</div>
-                        {% else %}
-                            <div>None reported</div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
+            {% endfor %}   
+        </div>
+    </div>
+    {% if races %}
+    <hr>
+    <div class="row">
+        <h2>Explore Your Ward</h2>
+        <p>Click on a ward below to get a look at the candidates and their contributions.</p>
+        {% for race in races %}        
+            <div class="col-sm-2 col-xs-4">
+                <h4><a href="race/{{race.ward}}">{{ race.name }}</a></h4>
             </div>
-            {% endfor %}
-        {% else %}
-            <strong>There are no races present.</strong>
-        {% endif %}
+        {% endfor %}
+    </div>
+    {% else %}
+        <strong>There are no races present.</strong>
+    {% endif %}
     
 {% endblock %}

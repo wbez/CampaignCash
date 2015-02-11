@@ -1,18 +1,34 @@
 {% extends 'base.html' %}
 {% load humanize %}
+{% load mathfilters %}
 
 {% block content %}
         {% if race %}
         <h1>{{ race.name }}</h1>
-            <ul>
-                {% for candidate in race.appcandidate_set.all %}
-                <li><a href="../../candidate/{{candidate.id}}">{{ candidate }}</a>:
-                    {% for committee in candidate.appcommittee_set.all %}
-                        ${{ committee.sum_contributions|intcomma  }}
-                    {% endfor %}
-                {% endfor %}
-                </li>
-            </ul>
+        <p>Click the name of a candidate to see each contribution to their campaign committees (some candiadtes have more than one). Some candidates either don't have committees or haven't raised enough to trigger state reporting requirements.</p>
+            {% for candidate in race.appcandidate_set.all %}
+                {% if candidate.sum_contributions %}
+                <div class="row">
+                    <div class="col-sm-4">
+                        <span><a href="../../candidate/{{candidate.id}}">{{ candidate }}</a></span>
+                        <span class="pull-right">${{ candidate.sum_contributions|floatformat:"2"|intcomma }}</span>
+                    </div>
+                    <div class="col-sm-8 chart">
+                        <div style="width: {% widthratio candidate.sum_contributions race.max_contributions 100 %}%;"></div>    
+                    </div>
+                </div>
+                {% else %}
+                <div class="row">
+                    <div class="col-sm-4">
+                        <span><a href="../../candidate/{{candidate.id}}">{{ candidate }}</a></span>
+                        <span class="pull-right">None reported</span>
+                    </div>
+                    <div class="col-sm-8 chart">
+                        <div style="width: 0px;"></div>    
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %} 
         {% else %}
             <strong>There are no races present.</strong>
         {% endif %}

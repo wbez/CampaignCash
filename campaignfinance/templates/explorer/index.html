@@ -12,15 +12,30 @@
                 <div class="col-sm-3">
                     <h3><a href="race/{{race.ward}}">{{ race.name }}</a></h3>
                 </div>
-                <div class="col-sm-9">
+                <div class="col-sm-3">
                     {% for candidate in race.appcandidate_set.all %}
                         <li>
-                            <a href="../../candidate/{{candidate.id}}">{{ candidate }}</a>: ${{ candidate.sum_contributions|intcomma  }}
+                            <a href="../../candidate/{{candidate.id}}">{{ candidate }}</a>: 
+                            <span class="pull-right">
+                            {% if candidate.sum_contributions != None %}
+                                ${{ candidate.sum_contributions|floatformat:2|intcomma }}
+                            {% else %}
+                                None reported
+                            {% endif %}
+                            </span>
                         </li>
                     {% endfor %}
                 </div>
+                <div class="col-sm-6 chart">
+                    {% for candidate in race.appcandidate_set.all %}
+                        {% if candidate.sum_contributions != None %}
+                            <div style="width: 25%;">{{candidate.sum_contributions}}</div>
+                        {% else %}
+                            <div>None reported</div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
             </div>
-
             {% endfor %}
         {% else %}
             <strong>There are no races present.</strong>

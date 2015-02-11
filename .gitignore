@@ -5,3 +5,4 @@ data/
 campaignfinance/_output/
 campaignfinance/campaignfinance/settings.py
 campaignfinance/models_test.py
+candidates.csv

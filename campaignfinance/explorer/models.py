@@ -6,6 +6,7 @@ class Race(models.Model):
     name = models.CharField(max_length=128, unique=True)
     ward = models.IntegerField(max_length=2, unique=True)
     slug = models.SlugField()
+    description = models.TextField(blank=True)
 
     def get_absolute_url(self):
     	from django.core.urlresolvers import reverse
@@ -20,10 +21,12 @@ class Race(models.Model):
 
 class AppCandidate(models.Model):
 	races = models.ManyToManyField(Race)
-	nameFirst = models.CharField(max_length=128, unique=True)
-	nameLast = models.CharField(max_length=128, unique=True)
+	nameFirst = models.CharField(max_length=128)
+	nameLast = models.CharField(max_length=128)
+	nameMiddle = models.CharField(max_length=128, blank=True)
 	incumbant = models.BooleanField(default=False)
 	slug = models.SlugField()
+	bio = models.TextField(blank=True)
 
 	def save(self, *args, **kwargs):
 		slugvalue = '%s %s' % (self.nameFirst, self.nameLast)
@@ -34,6 +37,7 @@ class AppCandidate(models.Model):
 		"Returns the sum of contributions for this candidate"
 		total = Receipts.objects.filter(committeeid__candidate=self.id).aggregate(Sum('amount'))
 		return total['amount__sum']
+	
 	sum_contributions = property(_get_all_contributions)
 
 	def __unicode__(self):
@@ -41,9 +45,9 @@ class AppCandidate(models.Model):
 
 class AppCommittee(models.Model):
 	committeeid = models.IntegerField(primary_key=True)
-	name = models.CharField(max_length=128, unique=True)
-	candidate = models.ForeignKey(AppCandidate)
-	slug = models.SlugField()
+	name = models.TextField(max_length=255)
+	candidate = models.ForeignKey(AppCandidate, null=True)
+	slug = models.SlugField(max_length=255)
 
 	def save(self, *args, **kwargs):
 		self.slug = slugify(unicode(self.name))
@@ -59,40 +63,40 @@ class AppCommittee(models.Model):
 		return '%s: %s' % (self.committeeid, self.candidate)
 
 class Receipts(models.Model):
-    committeeid = models.ForeignKey(AppCommittee,db_column='CommitteeID')  # Field name made lowercase.
-    lastonlyname = models.TextField(db_column='LastOnlyName', blank=True)  # Field name made lowercase.
-    firstname = models.TextField(db_column='FirstName', blank=True)  # Field name made lowercase.
-    rcvdate = models.DateField(db_column='RcvDate', blank=True, null=True)  # Field name made lowercase.
-    amount = models.FloatField(db_column='Amount', blank=True, null=True)  # Field name made lowercase.
-    loanamount = models.FloatField(db_column='LoanAmount', blank=True, null=True)  # Field name made lowercase.
-    occupation = models.TextField(db_column='Occupation', blank=True)  # Field name made lowercase.
-    employer = models.TextField(db_column='Employer', blank=True)  # Field name made lowercase.
-    address1 = models.TextField(db_column='Address1', blank=True)  # Field name made lowercase.
-    address2 = models.TextField(db_column='Address2', blank=True)  # Field name made lowercase.
-    city = models.TextField(db_column='City', blank=True)  # Field name made lowercase.
-    state = models.TextField(db_column='State', blank=True)  # Field name made lowercase.
-    zip = models.TextField(db_column='Zip', blank=True)  # Field name made lowercase.
-    rcttype = models.TextField(db_column='RctType', blank=True)  # Field name made lowercase.
-    description = models.TextField(db_column='Description', blank=True)  # Field name made lowercase.
-    vendorlastonlyname = models.TextField(db_column='VendorLastOnlyName', blank=True)  # Field name made lowercase.
-    vendorfirstname = models.TextField(db_column='VendorFirstName', blank=True)  # Field name made lowercase.
-    vendoraddress1 = models.TextField(db_column='VendorAddress1', blank=True)  # Field name made lowercase.
-    vendoraddress2 = models.TextField(db_column='VendorAddress2', blank=True)  # Field name made lowercase.
-    vendorcity = models.TextField(db_column='VendorCity', blank=True)  # Field name made lowercase.
-    vendorstate = models.TextField(db_column='VendorState', blank=True)  # Field name made lowercase.
-    vendorzip = models.TextField(db_column='VendorZip', blank=True)  # Field name made lowercase.
-    rpttype = models.TextField(db_column='RptType', blank=True)  # Field name made lowercase.
-    electiontype = models.TextField(db_column='ElectionType', blank=True)  # Field name made lowercase.
-    electionyear = models.TextField(db_column='ElectionYear', blank=True)  # Field name made lowercase.
-    rptpdbegdate = models.TextField(db_column='RptPdBegDate', blank=True, null=True)  # Field name made lowercase.
-    rptpdenddate = models.DateField(db_column='RptPdEndDate', blank=True, null=True)  # Field name made lowercase.
-    rptrcvddate = models.DateTimeField(db_column='RptRcvdDate', blank=True, null=True)  # Field name made lowercase.
-    cmterefername = models.TextField(db_column='CmteReferName', blank=True)  # Field name made lowercase.
-    cmtename = models.TextField(db_column='CmteName', blank=True)  # Field name made lowercase.
-    statecmte = models.NullBooleanField(db_column='StateCmte')  # Field name made lowercase.
-    stateid = models.IntegerField(db_column='StateID', blank=True, null=True)  # Field name made lowercase.
-    localcmte = models.NullBooleanField(db_column='LocalCmte')  # Field name made lowercase.
-    localid = models.IntegerField(db_column='LocalID', blank=True, null=True)  # Field name made lowercase.
+    committeeid = models.ForeignKey(AppCommittee,db_column='CommitteeID')  
+    lastonlyname = models.TextField(db_column='LastOnlyName', blank=True)  
+    firstname = models.TextField(db_column='FirstName', blank=True)  
+    rcvdate = models.DateField(db_column='RcvDate', blank=True, null=True)  
+    amount = models.FloatField(db_column='Amount', blank=True, null=True)  
+    loanamount = models.FloatField(db_column='LoanAmount', blank=True, null=True)  
+    occupation = models.TextField(db_column='Occupation', blank=True)  
+    employer = models.TextField(db_column='Employer', blank=True)  
+    address1 = models.TextField(db_column='Address1', blank=True)  
+    address2 = models.TextField(db_column='Address2', blank=True)  
+    city = models.TextField(db_column='City', blank=True)  
+    state = models.TextField(db_column='State', blank=True)  
+    zip = models.TextField(db_column='Zip', blank=True)  
+    rcttype = models.TextField(db_column='RctType', blank=True)  
+    description = models.TextField(db_column='Description', blank=True)  
+    vendorlastonlyname = models.TextField(db_column='VendorLastOnlyName', blank=True)  
+    vendorfirstname = models.TextField(db_column='VendorFirstName', blank=True)  
+    vendoraddress1 = models.TextField(db_column='VendorAddress1', blank=True)  
+    vendoraddress2 = models.TextField(db_column='VendorAddress2', blank=True)  
+    vendorcity = models.TextField(db_column='VendorCity', blank=True)  
+    vendorstate = models.TextField(db_column='VendorState', blank=True)  
+    vendorzip = models.TextField(db_column='VendorZip', blank=True)  
+    rpttype = models.TextField(db_column='RptType', blank=True)  
+    electiontype = models.TextField(db_column='ElectionType', blank=True)  
+    electionyear = models.TextField(db_column='ElectionYear', blank=True)  
+    rptpdbegdate = models.TextField(db_column='RptPdBegDate', blank=True, null=True)  
+    rptpdenddate = models.DateField(db_column='RptPdEndDate', blank=True, null=True)  
+    rptrcvddate = models.DateTimeField(db_column='RptRcvdDate', blank=True, null=True)  
+    cmterefername = models.TextField(db_column='CmteReferName', blank=True)  
+    cmtename = models.TextField(db_column='CmteName', blank=True)  
+    statecmte = models.NullBooleanField(db_column='StateCmte')  
+    stateid = models.IntegerField(db_column='StateID', blank=True, null=True)  
+    localcmte = models.NullBooleanField(db_column='LocalCmte')  
+    localid = models.IntegerField(db_column='LocalID', blank=True, null=True)  
     id = models.BigIntegerField(primary_key=True,unique=True)
 
     def __unicode__(self):
@@ -101,3 +105,24 @@ class Receipts(models.Model):
     class Meta:
         managed = False
         db_table = 'receipts'
+
+class Committees(models.Model):
+    cmterefername = models.TextField(db_column='CmteReferName', blank=True)  
+    statecmte = models.NullBooleanField(db_column='StateCmte')  
+    stateid = models.IntegerField(db_column='StateID', blank=True, null=True)  
+    localcmte = models.NullBooleanField(db_column='LocalCmte')  
+    localid = models.IntegerField(db_column='LocalID', blank=True, null=True)  
+    cmtename = models.TextField(db_column='CmteName', blank=True)  
+    address1 = models.TextField(db_column='Address1', blank=True)  
+    address2 = models.TextField(db_column='Address2', blank=True)  
+    address3 = models.TextField(db_column='Address3', blank=True)  
+    city = models.TextField(db_column='City', blank=True)  
+    state = models.TextField(db_column='State', blank=True)  
+    zip = models.TextField(db_column='Zip', blank=True)  
+    status = models.TextField(db_column='Status', blank=True)  
+    statusdate = models.DateField(db_column='StatusDate', blank=True, null=True)  
+    typeofcommittee = models.TextField(db_column='TypeOfCommittee', blank=True)  
+
+    class Meta:
+        managed = False
+        db_table = 'committees'

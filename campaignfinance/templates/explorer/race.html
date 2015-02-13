@@ -5,26 +5,35 @@
 {% block content %}
         {% if race %}
         <h1>{{ race.name }}</h1>
+        <p>Candidate figures are sums of all contributions reported to the <a href="http://www.elections.state.il.us/"></a>Illinois State Board of Elections</a>, and scrapped by <a href="http://electionmoney.org/"></a>Illinois Election Money</a>. Go to their site to <a href="http://electionmoney.org/documentation"></a>learn more about what is reported to the state</a>.</p>
+        <small><i class="fa fa-check"></i> = Incumbant</small>
         <p>Click the name of a candidate to see each contribution to their campaign committees (some candiadtes have more than one). Some candidates either don't have committees or haven't raised enough to trigger state reporting requirements.</p>
             {% for candidate in race.appcandidate_set.all %}
                 {% if candidate.sum_contributions %}
-                <div class="row">
-                    <div class="col-sm-4">
-                        <span><a href="../../candidate/{{candidate.id}}">{{ candidate }}</a></span>
-                        <span class="pull-right">${{ candidate.sum_contributions|floatformat:"2"|intcomma }}</span>
+                <div class="row candidate-container">
+                    <div class="col-sm-3">
+                        <span class="candidate"><a href="../../candidate/{{candidate.id}}">{{ candidate }}</a></span>
+                        {% if candidate.incumbant = True %}
+                            <i class="fa fa-check"></i>
+                        {% endif %}
                     </div>
-                    <div class="col-sm-8 chart">
-                        <div style="width: {% widthratio candidate.sum_contributions race.max_contributions 100 %}%;"></div>    
+                    <div class="col-sm-9 chart">
+                        {% widthratio candidate.sum_contributions race.max_contributions 100 as width%}
+                        <div style="width: {{ width|add:"1" }}%;"></div>    
+                        <span>${{ candidate.sum_contributions|floatformat:"2"|intcomma }}</span>
                     </div>
                 </div>
                 {% else %}
-                <div class="row">
-                    <div class="col-sm-4">
-                        <span><a href="../../candidate/{{candidate.id}}">{{ candidate }}</a></span>
-                        <span class="pull-right">None reported</span>
+                <div class="row candidate-container">
+                    <div class="col-sm-3">
+                        <span class="candidate"><a href="../../candidate/{{candidate.id}}">{{ candidate }}</a></span>
+                        {% if candidate.incumbant = True %}
+                            <i class="fa fa-check"></i>
+                        {% endif %}
                     </div>
-                    <div class="col-sm-8 chart">
+                    <div class="col-sm-9 chart">
                         <div style="width: 0px;"></div>    
+                        <span>None reported</span>
                     </div>
                 </div>
                 {% endif %}

@@ -15,7 +15,33 @@ body {
 	color:#333;
 }
 
+hr {
+	margin-bottom: -1em;
+}
+
+.candidate-container {
+	margin-bottom: 10px;
+}
+
+.header-nav {
+	vertical-align: middle; 
+}
+
+h3.candidate {
+	margin-top: 10px;
+	font-size: 24px;
+}
+
 a:link    { color: #666 }  /* unvisited links */
 a:visited { color: #999 }  /* visited links   */
 a:hover   { color: #B3DDF2 }  /* user hovers     */
 a:active  { color: #B3DDF2 }  /* active links    */
+
+@media (max-width: 768px) {
+	.ward-list {
+		font-size: 16px;
+	}
+	.header-nav {
+		font-size: 12px;
+	}
+}

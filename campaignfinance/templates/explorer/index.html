@@ -3,21 +3,30 @@
 {% load mathfilters %}
 
 {% block content %}
-    <h1>Campaign Finance Explorer</h1>
+    <h1>Chicago Campaign Finance Explorer</h1>
     <p>There's a lot of money in Chicago politics (and it's not all Rahm Emanuel's*).</p>
-    <p>See the updated totals for all the Chicago Mayoral candidates below. Then check the list of all 50 aldermanic races to see how the candidates stack up (or don't in some cases). Click on a race or a candidate to dig deeper into how their campaigns are financed.</p>
+    <p>See the updated totals for all the Chicago Mayoral candidates below. Click on a race or a candidate to dig deeper into how their campaigns are financed. Then check the list of all 50 aldermanic races to see how the candidates stack up (or don't in some cases).</p>
+    <p>
+        Candidate figures are sums of all contributions reported to the <a href="http://www.elections.state.il.us/"></a>Illinois State Board of Elections</a>, and scrapped by <a href="http://electionmoney.org/"></a>Illinois Election Money</a>. Go to their site to <a href="http://electionmoney.org/documentation"></a>learn more about what is reported to the state</a>.
+    </p>
     <small>*Most of it is, though</small>
     <hr>
     <div class="row">
         <div class="col-sm-12">
             <h2><a href="">{{mayor.name}}</a></h2>
+            <small><i class="fa fa-check"></i> = Incumbant</small>
             {% for candidate in mayor.appcandidate_set.all %}
                 <div class="row">
-                    <div class="col-sm-4">
-                        <span class="candidate"><a href="../../candidate/{{candidate.id}}">{{ candidate }}</a></span>
-                        <span class="pull-right money">${{ candidate.sum_contributions|floatformat:"2"|intcomma }}</span>
+                    <div class="col-sm-3">
+                        <span class="candidate">
+                            <a href="../../candidate/{{candidate.id}}">{{ candidate }}</a> 
+                            {% if candidate.incumbant = True %}
+                                <i class="fa fa-check"></i>
+                            {% endif %}
+                        </span>
                     </div>
-                    <div class="col-sm-8 chart">
+                    <div class="col-sm-9 chart">
+                        <span class="money">${{ candidate.sum_contributions|floatformat:"2"|intcomma }}</span>
                         <div style="width: {% widthratio candidate.sum_contributions mayor.max_contributions 100 %}%;"></div>    
                     </div>
                 </div>
@@ -27,13 +36,25 @@
     {% if races %}
     <hr>
     <div class="row">
-        <h2>Explore Your Ward</h2>
-        <p>Click on a ward below to get a look at the candidates and their contributions.</p>
-        {% for race in races %}        
-            <div class="col-sm-2 col-xs-4">
-                <h4><a href="race/{{race.ward}}">{{ race.name }}</a></h4>
+        <div class="col-sm-12">
+            <h2>Explore the Wards</h2>
+            <p>Click on a ward below to get a look at the candidates and their contributions.</p>
+            <p>Don't know your ward? Search your address in the map to see what your ward you're in (and if your ward has changed since the 2011 election).</p>
+        </div>
+                <div class="col-sm-12 map">
+            <iframe frameborder="0" scrolling="no" src="http://interactive.wbez.org/findyourward/" width="100%" height="600px"></iframe>
+        </div>
+        <div class="col-sm-12">
+            <div class="row">  
+            {% for race in races %}   
+               
+                <div class="col-xs-3">
+                    <h4 class="ward-list"><a href="race/{{race.ward}}">{{ race.name }}</a></h4>
+                </div>
+            
+            {% endfor %}
             </div>
-        {% endfor %}
+        </div>
     </div>
     {% else %}
         <strong>There are no races present.</strong>

@@ -8,7 +8,7 @@ urlpatterns = patterns('',
     # url(r'^$', 'campaignfinance.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^', include('explorer.urls')),
+    url(r'^elections/staging/', include('explorer.urls')),
 )
 
 urlpatterns += staticfiles_urlpatterns()

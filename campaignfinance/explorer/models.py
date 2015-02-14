@@ -24,7 +24,7 @@ class Race(models.Model):
 
 	def get_absolute_url(self):
 		from django.core.urlresolvers import reverse
-		return reverse('explorer.views.race', args=[self.id])
+		return reverse('explorer.views.race', args=[self.ward])
 
 	def save(self, *args, **kwargs):
 		self.slug = slugify(unicode(self.name))
@@ -41,6 +41,10 @@ class AppCandidate(models.Model):
 	incumbant = models.BooleanField(default=False)
 	slug = models.SlugField()
 	bio = models.TextField(blank=True)
+
+	def get_absolute_url(self):
+		from django.core.urlresolvers import reverse
+		return reverse('explorer.views.candidate', args=[self.id])
 
 	def save(self, *args, **kwargs):
 		slugvalue = '%s %s' % (self.nameFirst, self.nameLast)

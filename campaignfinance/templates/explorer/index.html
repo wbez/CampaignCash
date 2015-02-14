@@ -6,23 +6,22 @@
     <h1>Chicago Campaign Finance Explorer</h1>
     <p>There's a lot of money in Chicago politics (and it's not all Rahm Emanuel's*).</p>
     <p>See the updated totals for all the Chicago Mayoral candidates below. Click on a race or a candidate to dig deeper into how their campaigns are financed. Then check the list of all 50 aldermanic races to see how the candidates stack up (or don't in some cases).</p>
-    <p>
-        Candidate figures are sums of all contributions reported to the <a href="http://www.elections.state.il.us/"></a>Illinois State Board of Elections</a>, and scrapped by <a href="http://electionmoney.org/"></a>Illinois Election Money</a>. Go to their site to <a href="http://electionmoney.org/documentation"></a>learn more about what is reported to the state</a>.
-    </p>
+    <p>Candidate figures are sums of all contributions reported to the <a href="http://www.elections.state.il.us/">Illinois State Board of Elections</a>, and scrapped by <a href="http://electionmoney.org/">Illinois Election Money</a>. Go to their site to <a href="http://electionmoney.org/documentation">learn more about what is reported to the state</a>.</p>
     <small>*Most of it is, though</small>
     <hr>
     <div class="row">
         <div class="col-sm-12">
-            <h2><a href="">{{mayor.name}}</a></h2>
+            <h2><a href="{{mayor.get_absolute_url}}">{{mayor.name}}</a></h2>
             <small><i class="fa fa-check"></i> = Incumbant</small>
             {% for candidate in mayor.appcandidate_set.all %}
                 <div class="row">
                     <div class="col-sm-3">
-                        <span class="candidate">
-                            <a href="../../candidate/{{candidate.id}}">{{ candidate }}</a> 
+                        <span class="candidate pull-right">
                             {% if candidate.incumbant = True %}
                                 <i class="fa fa-check"></i>
                             {% endif %}
+
+                            <a href="{{candidate.get_absolute_url}}">{{ candidate }}</a> 
                         </span>
                     </div>
                     <div class="col-sm-9 chart">
@@ -40,20 +39,21 @@
             <h2>Explore the Wards</h2>
             <p>Click on a ward below to get a look at the candidates and their contributions.</p>
             <p>Don't know your ward? Search your address in the map to see what your ward you're in (and if your ward has changed since the 2011 election).</p>
+            <div class="dropdown">
+                <button class="btn btn-default btn-lg dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                    Choose a ward
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="wardDropdownMenu">
+                    {% for race in races %}
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="race/{{race.ward}}">{{ race.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div> 
         </div>
-                <div class="col-sm-12 map">
+
+        <div class="col-sm-12 map">
             <iframe frameborder="0" scrolling="no" src="http://interactive.wbez.org/findyourward/" width="100%" height="600px"></iframe>
-        </div>
-        <div class="col-sm-12">
-            <div class="row">  
-            {% for race in races %}   
-               
-                <div class="col-xs-3">
-                    <h4 class="ward-list"><a href="race/{{race.ward}}">{{ race.name }}</a></h4>
-                </div>
-            
-            {% endfor %}
-            </div>
         </div>
     </div>
     {% else %}

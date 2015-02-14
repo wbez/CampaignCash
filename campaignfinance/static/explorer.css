@@ -1,3 +1,8 @@
+body {
+	color:#333;
+	margin-bottom: 1em;
+}
+
 h1,h2,h3,h4,h5,h6 {
 	font-family: 'Roboto',sans-serif;
 }
@@ -9,10 +14,6 @@ h1,h2,h3,h4,h5,h6 {
 
 .money {
 	line-height: 24px;
-}
-
-body {
-	color:#333;
 }
 
 hr {
@@ -30,6 +31,16 @@ hr {
 h3.candidate {
 	margin-top: 10px;
 	font-size: 24px;
+}
+
+.dropdown {
+	margin-bottom: 15px;
+}
+
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
 }
 
 a:link    { color: #666 }  /* unvisited links */

@@ -6,12 +6,11 @@
 	
 {% block content %}
 	{% for race in candidate.races.all %}
-	<em><a href="{{ race.get_absolute_url }}">{{race.name}}</a></em>
+	<em><a href="{{ race.get_absolute_url }}">{{race.name}}</a> {% if candidate.incumbant = True %}
+        <i class="fa fa-check"></i> Incumbant
+    {% endif %}</em>
 	{% endfor %}
 	<h3 class="candidate">{{ candidate }} campaign contributions</h3>
-	{% if candidate.incumbant = True %}
-        <i class="fa fa-check"></i> Incumbant
-    {% endif %}
 	<p>Listed are all the contributions for each committee associated with the candidate reported to the <a href="http://www.elections.state.il.us/">Illinois State Board of Elections</a>, and scrapped by <a href="http://electionmoney.org/">Illinois Election Money</a>. Go to their site to <a href="http://electionmoney.org/documentation">learn more about what is reported to the state</a>.</p>
 	<p>Names and figures are displayed as reported to the state. Some names may be incorrect or listed under multiple spellings.</p>
 	<div class="main-table">
@@ -51,9 +50,9 @@
     <script>
     $(document).ready(function() {
 	    $('#data').dataTable({
-	    "paging":   false,
+	    "paging":   true,
 	    "ordering": true,
-        "order": [[ 2, "asc" ]],
+        "order": [[ 2, "desc" ]],
         "columnDefs": [
           { "type": "num-fmt", "targets": 1 },
           { "type": "date", "targets": 2 },

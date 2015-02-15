@@ -43,6 +43,10 @@ h3.candidate {
     overflow-x: hidden;
 }
 
+.headline {
+	border-bottom: solid #B3DDF2;
+}
+
 a:link    { color: #666 }  /* unvisited links */
 a:visited { color: #999 }  /* visited links   */
 a:hover   { color: #B3DDF2 }  /* user hovers     */

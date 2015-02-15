@@ -4,13 +4,13 @@ from django.utils.text import slugify
 
 class Race(models.Model):
 	name = models.CharField(max_length=128, unique=True)
-	ward = models.IntegerField(max_length=2, unique=True)
+	ward = models.IntegerField(db_index=True,max_length=2, unique=True)
 	slug = models.SlugField()
 	description = models.TextField(blank=True)
 
 	def _get_all_contributions(self):
 		"Returns the sum of contributions for this candidate"
-		total = Receipts.objects.filter(committeeid__candidate__races=self.id).aggregate(Sum('amount'))
+		total = Receipts.objects.filter(committeeid__candidate__races=self.id).values('amount').aggregate(Sum('amount'))
 		return total['amount__sum']
 	sum_contributions = property(_get_all_contributions)
 
@@ -53,15 +53,20 @@ class AppCandidate(models.Model):
 
 	def _get_all_contributions(self):
 		"Returns the sum of contributions for this candidate"
-		total = Receipts.objects.filter(committeeid__candidate=self.id).aggregate(Sum('amount'))
+		total = Receipts.objects.filter(committeeid__candidate=self.id).values('amount').aggregate(Sum('amount'))
 		return total['amount__sum']
 
-	def get_pecentage(self):
-		"Returns the sum of contributions for this candidate"
-		total = Receipts.objects.filter(committeeid__candidate=self.id).aggregate(Sum('amount'))
-		return total['amount__sum']
-	
+	def _get_top_employers(self):
+		employer_list = Receipts.objects.filter(committeeid__candidate=self.id).exclude(employer__in=['None','','Good faith effort','Good Faith Effort']).values('employer').annotate(employer_sum=Sum('amount')).order_by('-employer_sum')[:5]
+		return employer_list
+
+	def _get_top_donors(self):
+		employer_list = Receipts.objects.filter(committeeid__candidate=self.id).values('lastonlyname','firstname').annotate(donor_sum=Sum('amount')).order_by('-donor_sum')[:5]
+		return employer_list
+
 	sum_contributions = property(_get_all_contributions)
+	employer_list = property(_get_top_employers)
+	donor_list = property(_get_top_donors)
 
 	def __unicode__(self):
 		return '%s %s' % (self.nameFirst, self.nameLast)
@@ -70,7 +75,7 @@ class AppCandidate(models.Model):
 		ordering = ['nameLast']
 
 class AppCommittee(models.Model):
-	committeeid = models.IntegerField(primary_key=True)
+	committeeid = models.IntegerField(db_index=True,primary_key=True)
 	name = models.TextField(max_length=255)
 	candidate = models.ForeignKey(AppCandidate, null=True)
 	slug = models.SlugField(max_length=255)
@@ -81,7 +86,7 @@ class AppCommittee(models.Model):
 
 	def _get_all_contributions(self):
 		"Returns the sum of contributions for this committee"
-		total = self.receipts_set.aggregate(Sum('amount'))
+		total = self.receipts_set.values('amount').aggregate(Sum('amount'))
 		return total['amount__sum']
 	sum_contributions = property(_get_all_contributions)
 
@@ -89,7 +94,7 @@ class AppCommittee(models.Model):
 		return '%s: %s' % (self.committeeid, self.candidate)
 
 class Receipts(models.Model):
-	committeeid = models.ForeignKey(AppCommittee,db_column='CommitteeID')  
+	committeeid = models.ForeignKey(AppCommittee,db_column='CommitteeID',db_index=True)  
 	lastonlyname = models.TextField(db_column='LastOnlyName', blank=True)  
 	firstname = models.TextField(db_column='FirstName', blank=True)  
 	rcvdate = models.DateField(db_column='RcvDate', blank=True, null=True)  

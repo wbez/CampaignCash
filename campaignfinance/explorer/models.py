@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Sum, Max
+from django.db.models import Sum, Max, Q
 from django.utils.text import slugify
 
 class Race(models.Model):
@@ -24,7 +24,7 @@ class Race(models.Model):
 
 	def get_absolute_url(self):
 		from django.core.urlresolvers import reverse
-		return reverse('explorer.views.race', args=[self.ward])
+		return reverse('explorer.views.race', args=[self.slug])
 
 	def save(self, *args, **kwargs):
 		self.slug = slugify(unicode(self.name))
@@ -44,7 +44,7 @@ class AppCandidate(models.Model):
 
 	def get_absolute_url(self):
 		from django.core.urlresolvers import reverse
-		return reverse('explorer.views.candidate', args=[self.id])
+		return reverse('explorer.views.candidate', args=[self.slug])
 
 	def save(self, *args, **kwargs):
 		slugvalue = '%s %s' % (self.nameFirst, self.nameLast)
@@ -57,7 +57,10 @@ class AppCandidate(models.Model):
 		return total['amount__sum']
 
 	def _get_top_employers(self):
-		employer_list = Receipts.objects.filter(committeeid__candidate=self.id).exclude(employer__in=['None','','Good faith effort','Good Faith Effort']).values('employer').annotate(employer_sum=Sum('amount')).order_by('-employer_sum')[:5]
+		name_list = ['none','','good faith effort','best effort made','information requested','best faith effort made']
+		q_list = map(lambda n: Q(employer__iexact=n), name_list)
+		q_list = reduce(lambda a, b: a | b, q_list)
+		employer_list = Receipts.objects.filter(committeeid__candidate=self.id).exclude(q_list).values('employer').annotate(employer_sum=Sum('amount')).order_by('-employer_sum')[:5]
 		return employer_list
 
 	def _get_top_donors(self):
@@ -69,7 +72,7 @@ class AppCandidate(models.Model):
 	donor_list = property(_get_top_donors)
 
 	def __unicode__(self):
-		return '%s %s' % (self.nameFirst, self.nameLast)
+		return '%s %s %s' % (self.nameFirst, self.nameMiddle, self.nameLast)
 
 	class Meta:
 		ordering = ['nameLast']

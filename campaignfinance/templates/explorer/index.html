@@ -46,7 +46,7 @@
                 </button>
                 <ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="wardDropdownMenu">
                     {% for race in races %}
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="race/{{race.ward}}">{{ race.name }}</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{{race.get_absolute_url}}">{{ race.name }}</a></li>
                     {% endfor %}
                 </ul>
             </div> 

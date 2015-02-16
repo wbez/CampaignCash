@@ -5,7 +5,7 @@
 {% block content %}
         {% if race %}
         {% with race_max=race.max_contributions %}
-        <h1><span class="headline">{{ race.name }}</span></h1>
+        <h1>{{ race.name }}</h1>
         <p>Candidate figures are sums of all contributions reported to the <a href="http://www.elections.state.il.us/">Illinois State Board of Elections</a>, and scrapped by <a href="http://electionmoney.org/">Illinois Election Money</a>. Go to their site to <a href="http://electionmoney.org/documentation">learn more about what is reported to the state</a>.</p>
         <small><i class="fa fa-check"></i> = Incumbant</small>
         <p>Click the name of a candidate to see each contribution to their campaign committees (some candiadtes have more than one). Some candidates either don't have committees or haven't raised enough to trigger state reporting requirements.</p>
@@ -30,7 +30,7 @@
                 {% else %}
                 <div class="row candidate-container">
                     <div class="col-sm-3">
-                        <span class="candidate"><a href="../../candidate/{{candidate.id}}">{{ candidate }}</a></span>
+                        <span class="candidate pull-right"><a href="{{canidate.get_absolute_url}}">{{ candidate }}</a></span>
                         {% if candidate.incumbant = True %}
                             <i class="fa fa-check"></i>
                         {% endif %}
@@ -50,19 +50,27 @@
         
         {% for candidate in race.appcandidate_set.all %}
         <div class="row">
-            <h3><span class="headline">{{candidate}}</span></h3>
+            <h3><span class="headline"><a href="{{canidate.get_absolute_url}}">{{candidate}}</a></span></h3>
             <div class="red-line"></div>
             <div class="col-sm-6">
                 <h4 class="text-uppercase"><i class="fa fa-user"></i> Top donors</h4>
+                {% if candidate.donor_list %}
                 {% for donor in candidate.donor_list %}
                     <p><strong>{% if donor.firstname %}{{donor.firstname}}{% endif %} {{donor.lastonlyname}}</strong>: ${{donor.donor_sum|floatformat:"2"|intcomma}}</p>
                 {% endfor %}
+                {% else %}
+                <p><strong>None reported</strong></p>
+                {% endif %}
             </div>
             <div class="col-sm-6">
-                <h4 class="text-uppercase"><i class="fa fa-university"></i> Top employers</h4>
+                <h4 class="text-uppercase"><i class="fa fa-university"></i>Top employers</h4>
+                {% if candidate.employer_list %}
                 {% for employer in candidate.employer_list %}
                     <p><strong>{{employer.employer}}</strong>: ${{employer.employer_sum|floatformat:"2"|intcomma}}</p>
                 {% endfor %}
+                {% else %}
+                <p><strong>None reported</strong></p>
+                {% endif %}
             </div>
         </div>
         {% endfor %}

@@ -3,29 +3,35 @@ from django.http import HttpResponse
 from explorer.models import Receipts,Race,AppCandidate,AppCommittee
 import json, datetime
 from django.contrib.humanize.templatetags.humanize import intcomma
+from django.db.models import Max
 
 
 def index(request):
 	race_list = Race.objects.filter(ward__gt=0)
 	mayor = Race.objects.get(ward=0)
-	context_dict = {'races': race_list,'mayor': mayor}
+	max_date = Receipts.objects.all().values('rcvdate').aggregate(Max('rcvdate'))
+	context_dict = {'races': race_list,'mayor': mayor,'max_date':max_date['rcvdate__max']}
 
 	return render(request, 'explorer/index.html', context_dict)
 
 def race(request, slug):
+	race_list = Race.objects.filter(ward__gt=0)
 	race = get_object_or_404(Race,slug=slug)
-	context_dict = {'race': race}
+	context_dict = {'races': race_list,'race': race}
 
 	return render(request, 'explorer/race.html', context_dict)
 
 def candidate(request, slug):
+	race_list = Race.objects.filter(ward__gt=0)
 	candidate_obj = get_object_or_404(AppCandidate,slug=slug)
 	context_dict = {'candidate': candidate_obj}
 	context_dict['receipts'] = Receipts.objects.filter(committeeid__candidate__slug = slug)
+	context_dict['races'] = race_list
 
 	return render(request, 'explorer/detail.html', context_dict)
 
 def datatables(request, slug):
+	race_list = Race.objects.filter(ward__gt=0)
 	receipts = Receipts.objects.filter(committeeid__candidate__slug = slug)
 	rows = []
 	for receipt in receipts:

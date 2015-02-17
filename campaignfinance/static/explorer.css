@@ -4,16 +4,19 @@ body {
 }
 
 h1,h2,h3,h4,h5,h6 {
-	font-family: 'Roboto',sans-serif;
+	font-family: 'Roboto Condensed',sans-serif;
 }
 
 .candidate {
-	font-size: 18px;
+	font-size: 24px;
 	line-height: 24px;
+	font-family: 'Roboto Condensed',sans-serif;
 }
 
 .money {
 	line-height: 24px;
+	font-size: 18px;
+	font-family: 'Roboto Condensed',sans-serif;
 }
 
 hr {
@@ -44,14 +47,29 @@ h3.candidate {
 }
 
 .headline {
-	border-bottom: solid #B3DDF2;
+	border-bottom: solid #FF0000;
+}
+
+.header-nav .dropdown {
+	display:inline;
+}
+
+.header-nav li {
+	font-size: 12px;
+}
+
+.updated {
+	font-size: 12px;
+	line-height: 14px;
+	color: #999;
+	font-style: italic;
 }
 
 a:link    { color: #428bca }  /* unvisited links */
 a:hover   { color: #B3DDF2 }  /* user hovers     */
 a:active  { color: #B3DDF2 }  /* active links    */
 
-.headline a:hover {
+a:hover {
 	text-decoration: none;
 }
 
@@ -61,5 +79,11 @@ a:active  { color: #B3DDF2 }  /* active links    */
 	}
 	.header-nav {
 		font-size: 12px;
+	}
+	.candidate.pull-right {
+		float:none!important;
+	}
+	.summary .col-sm-6 {
+		margin-bottom: 2em;
 	}
 }

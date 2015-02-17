@@ -5,15 +5,38 @@
 {% endblock %}
 	
 {% block content %}
-	{% for race in candidate.races.all %}
-	<em><a href="{{ race.get_absolute_url }}">{{race.name}}</a> {% if candidate.incumbant = True %}
-        <i class="fa fa-check"></i> Incumbant
-    {% endif %}</em>
-	{% endfor %}
-	<h3 class="candidate">{{ candidate }} campaign contributions</h3>
-	<p>Listed are all the contributions for each committee associated with the candidate reported to the <a href="http://www.elections.state.il.us/">Illinois State Board of Elections</a>, and scrapped by <a href="http://electionmoney.org/">Illinois Election Money</a>. Go to their site to <a href="http://electionmoney.org/documentation">learn more about what is reported to the state</a>.</p>
+	<h2 class="headline">{{ candidate }} campaign contributions{% for race in candidate.races.all %} |
+	<a href="{{ race.get_absolute_url }}">{{race.name}}</a> {% if candidate.incumbant = True %}<small><i class="fa fa-check"></i> Incumbent</small>
+    {% endif %}
+	{% endfor %}</h2>
+	<p>Listed are all the contributions for each committee associated with the candidate reported to the <a href="http://www.elections.state.il.us/">Illinois State Board of Elections</a>, and scraped by <a href="http://electionmoney.org/">Illinois Election Money</a>. Go to their site to <a href="http://electionmoney.org/documentation">learn more about what is reported to the state</a>.</p>
+	<p>Sort by size of contribution, and see who’s writing the big checks. Sort by name of employer to see what companies and city agencies are giving a lot of money to certain candidates.</p>
 	<p>Names and figures are displayed as reported to the state. Some names may be incorrect or listed under multiple spellings.</p>
+	<h3><span class="headline">Summary</span></h3>
+	<div class="row">
+            <div class="col-sm-6">
+                <h4 class="text-uppercase"><i class="fa fa-user"></i> Top donors</h4>
+                {% if candidate.donor_list %}
+                {% for donor in candidate.donor_list %}
+                    <p><strong>{% if donor.firstname %}{{donor.firstname}}{% endif %} {{donor.lastonlyname}}</strong>: ${{donor.donor_sum|floatformat:"2"|intcomma}}</p>
+                {% endfor %}
+                {% else %}
+                <p><strong>None reported</strong></p>
+                {% endif %}
+            </div>
+            <div class="col-sm-6">
+                <h4 class="text-uppercase"><i class="fa fa-university"></i>Top employers</h4>
+                {% if candidate.employer_list %}
+                {% for employer in candidate.employer_list %}
+                    <p><strong>{{employer.employer|title}}</strong>: ${{employer.employer_sum|floatformat:"2"|intcomma}}</p>
+                {% endfor %}
+                {% else %}
+                <p><strong>None reported</strong></p>
+                {% endif %}
+            </div>
+        </div>
 	<div class="main-table">
+		<h3><span class="headline">All contributions</span></h3>
 	    <table id="data" class="table table-striped table-condensed" cellspacing="0">
 	    	<thead>
 	            <tr>

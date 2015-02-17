@@ -60,6 +60,7 @@ class AppCandidate(models.Model):
 		name_list = ['none','','good faith effort','best effort made','information requested','best faith effort made']
 		q_list = map(lambda n: Q(employer__iexact=n), name_list)
 		q_list = reduce(lambda a, b: a | b, q_list)
+		#employer_list = Receipts.objects.filter(committeeid__candidate=self.id).exclude(q_list).extra({'employerlower':'Lower("Employer")'}).values('employerlower').annotate(employer_sum=Sum('amount')).order_by('-employer_sum')[:5]
 		employer_list = Receipts.objects.filter(committeeid__candidate=self.id).exclude(q_list).values('employer').annotate(employer_sum=Sum('amount')).order_by('-employer_sum')[:5]
 		return employer_list
 
@@ -97,7 +98,7 @@ class AppCommittee(models.Model):
 		return '%s: %s' % (self.committeeid, self.candidate)
 
 class Receipts(models.Model):
-	committeeid = models.ForeignKey(AppCommittee,db_column='CommitteeID',db_index=True)  
+	committeeid = models.ForeignKey(AppCommittee,db_column='CommitteeID',db_index=True,primary_key=True)  
 	lastonlyname = models.TextField(db_column='LastOnlyName', blank=True)  
 	firstname = models.TextField(db_column='FirstName', blank=True)  
 	rcvdate = models.DateField(db_column='RcvDate', blank=True, null=True)  
@@ -131,7 +132,6 @@ class Receipts(models.Model):
 	stateid = models.IntegerField(db_column='StateID', blank=True, null=True)  
 	localcmte = models.NullBooleanField(db_column='LocalCmte')  
 	localid = models.IntegerField(db_column='LocalID', blank=True, null=True)  
-	id = models.BigIntegerField(primary_key=True,unique=True)
 
 	def __unicode__(self):
 		return '%s: %s, %s' % (self.amount, self.lastonlyname, self.rcvdate)

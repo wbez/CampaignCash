@@ -10,7 +10,7 @@
     <!-- Bootstrap -->
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <link href='http://fonts.googleapis.com/css?family=Roboto|Open+Sans' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto|Open+Sans|Roboto+Condensed' rel='stylesheet' type='text/css'>
     
     <link rel="stylesheet" type="text/css" href="{% static "explorer.css" %}">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -59,7 +59,18 @@
         </g>
         </svg>
       </a>
-      <span class="header-nav">Chicago Campaign Finance Explorer | <a href="{% url "index" %}">Home</a>
+      <span class="header-nav">Chicago Campaign Finance Explorer | <a href="{% url "index" %}">Home</a> | 
+        <div class="dropdown">
+            <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                Choose a ward
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="wardDropdownMenu">
+                {% for race in races %}
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{race.get_absolute_url}}">{{ race.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div> 
       </span>
     </header>
     <div class="container">

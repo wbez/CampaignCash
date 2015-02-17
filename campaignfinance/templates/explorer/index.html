@@ -3,24 +3,23 @@
 {% load mathfilters %}
 
 {% block content %}
-    <h1><span class="headline">Chicago Campaign Finance Explorer</span></h1>
-    <p>There's a lot of money in Chicago politics (and it's not all Rahm Emanuel's*).</p>
-    <p>See the updated totals for all the Chicago Mayoral candidates below. Click on a race or a candidate to dig deeper into how their campaigns are financed. Then check the list of all 50 aldermanic races to see how the candidates stack up (or don't in some cases).</p>
-    <p>Candidate figures are sums of all contributions reported to the <a href="http://www.elections.state.il.us/">Illinois State Board of Elections</a>, and scrapped by <a href="http://electionmoney.org/">Illinois Election Money</a>. Go to their site to <a href="http://electionmoney.org/documentation">learn more about what is reported to the state</a>.</p>
-    <small>*Most of it is, though</small>
+    <h1 class="headline">Chicago Campaign Finance Explorer</h1>
+    <div class="updated">Last updated {{max_date}}</div>
+    <p>There’s a lot of money in Chicago politics. We here at WBEZ thought everyone should have the ability to sort through and examine the money raised by Chicago politicians.</p>
+    <p>The mayoral race appears below. You can bring up any aldermanic race in the city by using the ward finder below. Once you’ve got the race you want to look at, simply click the name of a candidate to bring up all of their campaign finance information.</p>
+    <p>Candidate figures are sums of all contributions reported to the <a href="http://www.elections.state.il.us/">Illinois State Board of Elections</a>, and scraped by <a href="http://electionmoney.org/">Illinois Election Money</a>. Go to their site to <a href="http://electionmoney.org/documentation">learn more about what is reported to the state</a>.</p>
     <hr>
     <div class="row">
         <div class="col-sm-12">
-            <h2><a href="{{mayor.get_absolute_url}}">{{mayor.name}}</a></h2>
-            <small><i class="fa fa-check"></i> = Incumbant</small>
+            <h2><a class="headline" href="{{mayor.get_absolute_url}}">{{mayor.name}}</a></h2>
+            <small><i class="fa fa-check"></i> = Incumbent</small>
             {% for candidate in mayor.appcandidate_set.all %}
-                <div class="row">
+                <div class="row candidate-container">
                     <div class="col-sm-3">
-                        <span class="candidate pull-right">
+                        <span class="candidate pull-right text-right">
                             {% if candidate.incumbant = True %}
                                 <i class="fa fa-check"></i>
                             {% endif %}
-
                             <a href="{{candidate.get_absolute_url}}">{{ candidate }}</a> 
                         </span>
                     </div>
@@ -36,7 +35,7 @@
     <hr>
     <div class="row">
         <div class="col-sm-12">
-            <h2>Explore the Wards</h2>
+            <h2><span class="headline">Explore the Wards</span></h2>
             <p>Click on a ward below to get a look at the candidates and their contributions.</p>
             <p>Don't know your ward? Search your address in the map to see what your ward you're in (and if your ward has changed since the 2011 election).</p>
             <div class="dropdown">

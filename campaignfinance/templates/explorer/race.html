@@ -4,51 +4,20 @@
 
 {% block content %}
         {% if race %}
-        {% with race_max=race.max_contributions %}
         <h1 class="headline">{{ race.name }}</h1>
         <p>Candidate figures are sums of all contributions reported to the <a href="http://www.elections.state.il.us/">Illinois State Board of Elections</a>, and scraped by <a href="http://electionmoney.org/">Illinois Election Money</a>. Go to their site to <a href="http://electionmoney.org/documentation">learn more about what is reported to the state</a>.</p>
         <p>Click the name of a candidate to see each contribution to their campaign committees (some candidates have more than one). Some candidates either don't have committees or haven't raised enough to trigger state reporting requirements. 
         <p>Names and figures are displayed as reported to the state. Some names may be incorrect or listed under multiple spellings.</p>
+        <p>Contributions since last election include all donation since Feb. 22, 2011. All contributions include all donations on the State Board of Elections website, complete since 2000.</p>
         <small><i class="fa fa-check"></i> = Incumbent</small>
-            {% for candidate in race.appcandidate_set.all %}
-                {% with contributions=candidate.sum_contributions %}
-                {% if contributions %}
-                <div class="row candidate-container">
-                    <div class="col-sm-3">
-                        <span class="candidate pull-right text-right">
-                            {% if candidate.incumbant = True %}
-                                <i class="fa fa-check"></i>
-                            {% endif %}
-                            <a href="{{candidate.get_absolute_url}}">{{ candidate }}</a> 
-                        </span>
-                    </div>
-                    <div class="col-sm-9 chart">
-                        {% widthratio contributions race_max 100 as width%}
-                        <div style="width: {{ width|add:"1" }}%;"></div>    
-                        <span>${{ contributions|floatformat:"2"|intcomma }}</span>
-                    </div>
-                </div>
-                {% else %}
-                <div class="row candidate-container">
-                    <div class="col-sm-3">
-                        <span class="candidate pull-right">{{ candidate }}</span>
-                        {% if candidate.incumbant = True %}
-                            <i class="fa fa-check"></i>
-                        {% endif %}
-                    </div>
-                    <div class="col-sm-9 chart">
-                        <div style="width: 0px;"></div>    
-                        <span>None reported</span>
-                    </div>
-                </div>
-                {% endif %}
-                {% endwith %}
-            {% endfor %} 
-        {% endwith %}
+        <div class="candidate-list">
+        <h2></small><small class='timefilter recent active'>CONTRIBUTIONS SINCE LAST ELECTION</small> | <small class='timefilter all'>ALL CONTRIBUTIONS</small></h2>
+        {% include 'explorer/candidate_template_recent.html' %} 
+        {% include 'explorer/candidate_template_all.html' %} 
         {% else %}
             <strong>There are no races present.</strong>
         {% endif %}
-
+        </div>
         <h4>Definitions</h4>
         <p><strong>Top donors: </strong>Individuals or organizations that have contributed the most to a candidate.</p>
         <p><strong>Top employers: </strong>Sums individual donations grouped by employer reported by the individual.</p>

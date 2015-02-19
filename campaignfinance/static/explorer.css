@@ -7,6 +7,33 @@ h1,h2,h3,h4,h5,h6 {
 	font-family: 'Roboto Condensed',sans-serif;
 }
 
+header {
+  background-color:#333;
+  color:#fff;
+  padding:1em 2.5% 0.5em;
+}
+
+header a {
+	color:#999;
+	margin-right: 15px;
+}
+
+.header-nav {
+	position:relative;
+	bottom:.5em;
+}
+
+.hightlight {
+  background-color: #333    }
+
+.chart div {
+  background-color: #B3DDF2;
+  text-align: left;
+  margin: 1px;
+  color: #333;
+  height:20px;
+}
+
 .candidate {
 	font-size: 24px;
 	line-height: 24px;
@@ -24,11 +51,11 @@ hr {
 }
 
 .candidate-container {
-	margin-bottom: 10px;
+	margin: 10px;
 }
 
-.header-nav {
-	vertical-align: middle; 
+.candidate-list {
+	margin:15px 0px;
 }
 
 h3.candidate {
@@ -63,6 +90,18 @@ h3.candidate {
 	line-height: 14px;
 	color: #999;
 	font-style: italic;
+}
+
+.active {
+	color:#FF0000;
+}
+
+.candidate-container.all {
+	display: none;
+}
+
+.timefilter {
+	cursor:pointer;
 }
 
 a:link    { color: #428bca }  /* unvisited links */

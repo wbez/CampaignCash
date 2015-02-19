@@ -5,7 +5,20 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Chicago Campiagn Finance</title>
+    <title>WBEZ - Chicago Campiagn Cash</title>
+
+    <meta name="description" content="WBEZ's Chicago Campaign Cash explorers all the campaign contributions to local Chicago politicians.">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+
+    <meta property="og:title" content="WBEZ - Chicago Campaign Cash" />
+    <meta property="og:url" content="http:" />
+    <meta property="og:type" content="article" />
+    <meta property="og:description" content="WBEZ's Chicago Campaign Cash explorers all the campaign contributions to local Chicago politicians." />
+    <meta property="og:image" content="http://interactive.wbez.org/campaigncash/" />
+    <meta property="og:site_name" content="wbez.org" />
 
     <!-- Bootstrap -->
     <!-- Latest compiled and minified CSS -->
@@ -21,26 +34,19 @@
     <![endif]-->
     {% block extracss %}{% endblock %}
     <style type="text/css">
-    header {
-      background-color:#333;
-      color:#fff;
-      padding:1em 2.5% 0.5em;
-    }
 
-    .hightlight {
-      background-color: #333    }
-
-    .chart div {
-      background-color: #B3DDF2;
-      text-align: left;
-      margin: 1px;
-      color: #333;
-      height:20px;
-    }
 
     </style>
     <script>
+      if (window.self === window.top) { 
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
+        ga('create', 'UA-369047-1', 'wbez.org');
+        ga('send', 'pageview');
+      }
     </script>
   </head>
   <body>
@@ -59,8 +65,8 @@
         </g>
         </svg>
       </a>
-      <span class="header-nav">Chicago Campaign Finance Explorer | <a href="{% url "index" %}">Home</a> | 
-        <div class="dropdown">
+      <span class="header-nav"><a href="{% url "index" %}">Chicago Campaign Finance Explorer</a> 
+        <div class="dropdown ward-menu hidden-xs">
             <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
                 Choose a ward
                 <span class="caret"></span>
@@ -83,6 +89,25 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"></script>
     {% block extrajs %}{% endblock %}
+
+    <script type="text/javascript">
+    $('.timefilter.recent').click(function(){
+      console.log('recent');
+      $('.candidate-container.all').hide();
+      $('.candidate-container.recent').show();
+      $('.timefilter.recent').addClass('active');
+      $('.timefilter.all').removeClass('active');
+    })
+
+    $('.timefilter.all').click(function(){
+      console.log('all');
+      $('.candidate-container.recent').hide();
+      $('.candidate-container.all').show();
+      $('.timefilter.all').addClass('active');
+      $('.timefilter.recent').removeClass('active');
+    })
+
+    </script>
 
   </body>
 </html>

@@ -1,0 +1,35 @@
+{% load humanize %}
+
+{% for candidate in race.appcandidate_set.all %}
+    {% with contributions=candidate.sum_contributions %}
+    {% if contributions %}
+    <div class="row candidate-container all">
+        <div class="col-sm-3">
+            <span class="candidate pull-right text-right">
+                {% if candidate.incumbant = True %}
+                    <i class="fa fa-check"></i>
+                {% endif %}
+                <a href="{{candidate.get_absolute_url}}">{{ candidate }}</a> 
+            </span>
+        </div>
+        <div class="col-sm-9 chart">
+            <span class="money">${{ candidate.sum_contributions|floatformat:"2"|intcomma }}</span>
+            <div style="width: {% widthratio candidate.sum_contributions candidate.max_sum_contributions 100 %}%;"></div>    
+        </div>
+    </div>
+    {% else %}
+    <div class="row candidate-container all">
+        <div class="col-sm-3">
+            <span class="candidate pull-right text-right">
+                {% if candidate.incumbant = True %}
+                    <i class="fa fa-check"></i>
+                {% endif %}
+                <a href="{{candidate.get_absolute_url}}">{{ candidate }}</a> 
+            </span>
+        </div>
+        <div class="col-sm-9 chart">
+            <span class="money">None reported</span>
+            <div style="width: 0px;"></div>    
+        </div>
+    </div>
+{% endfor %}

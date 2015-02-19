@@ -3,7 +3,7 @@ from explorer.models import Race, AppCommittee, AppCandidate, Receipts, Committe
 
 class HomeRenderer(StaticSiteRenderer):
     def get_paths(self):
-        paths = ["/elections/staging/", ]
+        paths = ["/campaigncash/", ]
 
         races = Race.objects.all()
         for race in races:

@@ -1,34 +1,22 @@
 {% extends 'base.html' %}
 {% load humanize %}
-{% load mathfilters %}
 
 {% block content %}
-    <h1 class="headline">Chicago Campaign Finance Explorer</h1>
+    <h1 class="headline">Chicago Campaign Cash</h1>
     <div class="updated">Last updated {{max_date}}</div>
     <p>There’s a lot of money in Chicago politics. We here at WBEZ thought everyone should have the ability to sort through and examine the money raised by Chicago politicians.</p>
     <p>The mayoral race appears below. You can bring up any aldermanic race in the city by using the ward finder below. Once you’ve got the race you want to look at, simply click the name of a candidate to bring up all of their campaign finance information.</p>
     <p>Candidate figures are sums of all contributions reported to the <a href="http://www.elections.state.il.us/">Illinois State Board of Elections</a>, and scraped by <a href="http://electionmoney.org/">Illinois Election Money</a>. Go to their site to <a href="http://electionmoney.org/documentation">learn more about what is reported to the state</a>.</p>
+    <p>Contributions since last election include all donation since Feb. 22, 2011. All contributions include all donations on the State Board of Elections website, complete since 2000.</p>
     <hr>
     <div class="row">
         <div class="col-sm-12">
-            <h2><a class="headline" href="{{mayor.get_absolute_url}}">{{mayor.name}}</a></h2>
+            <h2><a class="headline" href="{{mayor.get_absolute_url}}">{{mayor.name}}</a> </small><small class='timefilter recent active'>CONTRIBUTIONS SINCE LAST ELECTION</small> | <small class='timefilter all'>ALL CONTRIBUTIONS</small></h2>
             <small><i class="fa fa-check"></i> = Incumbent</small>
-            {% for candidate in mayor.appcandidate_set.all %}
-                <div class="row candidate-container">
-                    <div class="col-sm-3">
-                        <span class="candidate pull-right text-right">
-                            {% if candidate.incumbant = True %}
-                                <i class="fa fa-check"></i>
-                            {% endif %}
-                            <a href="{{candidate.get_absolute_url}}">{{ candidate }}</a> 
-                        </span>
-                    </div>
-                    <div class="col-sm-9 chart">
-                        <span class="money">${{ candidate.sum_contributions|floatformat:"2"|intcomma }}</span>
-                        <div style="width: {% widthratio candidate.sum_contributions mayor.max_contributions 100 %}%;"></div>    
-                    </div>
-                </div>
-            {% endfor %}   
+            {% with mayor as race %}
+            {% include 'explorer/candidate_template_recent.html' %} 
+            {% include 'explorer/candidate_template_all.html' %} 
+            {% endwith %}
         </div>
     </div>
     {% if races %}

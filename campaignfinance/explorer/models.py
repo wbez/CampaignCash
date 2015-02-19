@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Sum, Max, Q
 from django.utils.text import slugify
+from datetime import date
 
 class Race(models.Model):
 	name = models.CharField(max_length=128, unique=True)
@@ -14,6 +15,12 @@ class Race(models.Model):
 		return total['amount__sum']
 	sum_contributions = property(_get_all_contributions)
 
+	def _get_recent_contributions(self):
+		"Returns the sum of contributions for this candidate"
+		total = Receipts.objects.filter(committeeid__candidate__races=self.id,rcvdate__gt='2011-02-22').values('amount').aggregate(Sum('amount'))
+		return total['amount__sum']
+	recent_contributions = property(_get_recent_contributions)
+
 	def _get_max_contributions(self):
 		"Returns the sum of contributions for this candidate"
 		totals = []
@@ -21,6 +28,14 @@ class Race(models.Model):
 			totals.append(c.sum_contributions)
 		return max(totals)
 	max_contributions = property(_get_max_contributions)
+
+	def _get_max_recent_contributions(self):
+		"Returns the sum of contributions for this candidate"
+		totals = []
+		for c in self.appcandidate_set.all():
+			totals.append(c.recent_contributions)
+		return max(totals)
+	max_recent_contributions = property(_get_max_recent_contributions)
 
 	def get_absolute_url(self):
 		from django.core.urlresolvers import reverse
@@ -68,9 +83,15 @@ class AppCandidate(models.Model):
 		employer_list = Receipts.objects.filter(committeeid__candidate=self.id).values('lastonlyname','firstname').annotate(donor_sum=Sum('amount')).order_by('-donor_sum')[:5]
 		return employer_list
 
+	def _get_recent_contributions(self):
+		"Returns the sum of contributions for this candidate"
+		total = Receipts.objects.filter(committeeid__candidate=self.id,rcvdate__gte=date(2011, 2, 22)).values('amount').aggregate(Sum('amount'))
+		return total['amount__sum']
+
 	sum_contributions = property(_get_all_contributions)
 	employer_list = property(_get_top_employers)
 	donor_list = property(_get_top_donors)
+	recent_contributions = property(_get_recent_contributions)
 
 	def __unicode__(self):
 		return '%s %s %s' % (self.nameFirst, self.nameMiddle, self.nameLast)

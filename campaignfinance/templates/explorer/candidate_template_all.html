@@ -1,7 +1,7 @@
 {% load humanize %}
 
 {% for candidate in race.appcandidate_set.all %}
-    {% with contributions=candidate.recent_contributions %}
+    {% with contributions=candidate.sum_contributions %}
     {% if contributions %}
     <div class="row candidate-container all">
         <div class="col-sm-3">
@@ -18,7 +18,7 @@
         </div>
     </div>
     {% else %}
-    <div class="row candidate-container recent">
+    <div class="row candidate-container all">
         <div class="col-sm-3">
             <span class="candidate pull-right text-right">
                 {% if candidate.incumbant = True %}

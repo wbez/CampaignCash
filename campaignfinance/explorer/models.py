@@ -72,7 +72,7 @@ class AppCandidate(models.Model):
 		return total['amount__sum']
 
 	def _get_top_employers(self):
-		name_list = ['none','','good faith effort','best effort made','information requested','best faith effort made']
+		name_list = ['none','','good faith effort','best effort made','information requested','best faith effort made','best effort']
 		q_list = map(lambda n: Q(employer__iexact=n), name_list)
 		q_list = reduce(lambda a, b: a | b, q_list)
 		#employer_list = Receipts.objects.filter(committeeid__candidate=self.id).exclude(q_list).extra({'employerlower':'Lower("Employer")'}).values('employerlower').annotate(employer_sum=Sum('amount')).order_by('-employer_sum')[:5]

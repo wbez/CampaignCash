@@ -1,7 +1,7 @@
 {% load humanize %}
 
 {% for candidate in race.appcandidate_set.all %}
-    {% with contributions=candidate.sum_contributions %}
+    {% with contributions=candidate.recent_contributions %}
     {% if contributions %}
     <div class="row candidate-container recent">
         <div class="col-sm-3">
@@ -14,11 +14,11 @@
         </div>
         <div class="col-sm-9 chart">
             <span class="money">${{ candidate.recent_contributions|floatformat:"2"|intcomma }}</span>
-            <div style="width: {% widthratio candidate.recent_contributions race.max_recent_contributions 100 %}%;"></div>    
+            <div style="width: {% widthratio candidate.recent_contributions race.max_contributions 100 %}%;"></div>    
         </div>
     </div>
     {% else %}
-    <div class="row candidate-container all">
+    <div class="row candidate-container recent">
         <div class="col-sm-3">
             <span class="candidate pull-right text-right">
                 {% if candidate.incumbant = True %}

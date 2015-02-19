@@ -2,7 +2,7 @@
 *.DS_Store
 */settings.py
 data/
-campaignfinance/_output/
+campaignfinance/_output/*
 campaignfinance/campaignfinance/settings.py
 campaignfinance/models_test.py
 candidates.csv

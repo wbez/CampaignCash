@@ -5,13 +5,27 @@
 {% endblock %}
 	
 {% block content %}
-	<h2 class="headline">{{ candidate }} campaign contributions{% for race in candidate.races.all %} |
+	<h2 class="headline">{{ candidate }}{% for race in candidate.races.all %} |
 	<a href="{{ race.get_absolute_url }}">{{race.name}}</a> {% if candidate.incumbant = True %}<small><i class="fa fa-check"></i> Incumbent</small>
     {% endif %}
 	{% endfor %}</h2>
-	<p>Listed are all the contributions for each committee associated with the candidate reported to the <a href="http://www.elections.state.il.us/">Illinois State Board of Elections, complete since 2000.</a>, and scraped by <a href="http://electionmoney.org/">Illinois Election Money</a>. Go to their site to <a href="http://electionmoney.org/documentation">learn more about what is reported to the state</a>.</p>
+	<p>Listed are all the contributions for each committee associated with the candidate reported to the <a href="http://www.elections.state.il.us/">Illinois State Board of Elections, complete since 2000</a>, and scraped by <a href="http://electionmoney.org/">Illinois Election Money</a>. Go to their site to <a href="http://electionmoney.org/documentation">learn more about what is reported to the state</a>.</p>
 	<p>Sort by size of contribution, and see who’s writing the big checks. Sort by name of employer to see what companies and city agencies are giving a lot of money to certain candidates.</p>
 	<p>Names and figures are displayed as reported to the state. Some names may be incorrect or listed under multiple spellings.</p>
+	
+	<h3><span class="headline">Committees</span></h3>
+		<div class="row">
+            <div class="col-sm-6">
+                {% if candidate.committee_list %}
+                {% for committee in candidate.committee_list %}
+                    <p><strong>{{committee.cmtename}}</strong>: ${{committee.cmtename_sum|floatformat:"2"|intcomma}}</p>
+                {% endfor %}
+                {% else %}
+                <p><strong>None reported</strong></p>
+                {% endif %}
+            </div>
+        </div>
+	
 	<h3><span class="headline">Summary</span></h3>
 	<div class="row">
             <div class="col-sm-6">
@@ -37,22 +51,27 @@
         </div>
 	<div class="main-table">
 		<h3><span class="headline">All contributions</span></h3>
-	    <table id="data" class="table table-striped table-condensed" cellspacing="0">
-	    	<thead>
-	            <tr>
-	            	<th>First name</th>
-	            	<th>Last name (or org. title)</th>
-	                <th>Amount</th>
-	                <th>Date Received</th>
-	                <th class="hidden-xs">Occupation</th>
-	                <th class="hidden-xs">Employer</th>
-	                <th class="hidden-xs">City</th>
-	                <th class="hidden-xs">State</th>
-	            </tr>
-	        </thead>
-	        <tbody>
-		    </tbody>
-		</table>
+		<div class="row">
+			<div class="col-xs-12">
+			    <table id="data" class="table table-striped table-condensed" cellspacing="0">
+			    	<thead>
+			            <tr>
+			            	<th>First name</th>
+			            	<th>Last name (or org. title)</th>
+			                <th>Amount</th>
+			                <th>Date Received</th>
+			                <th class="hidden-xs">Committee</th>
+			                <th class="hidden-xs hidden-sm">Occupation</th>
+			                <th class="hidden-xs">Employer</th>
+			                <th class="hidden-xs">City</th>
+			                <th class="hidden-xs">State</th>
+			            </tr>
+			        </thead>
+			        <tbody>
+				    </tbody>
+				</table>
+			</div>
+		</div>
 	</div>
 	<div class="footer">
 		<p></p>
@@ -63,7 +82,7 @@
     <script>
     $(document).ready(function() {
 	    $('#data').dataTable({
-	    "ajax": 'json/index.json',
+	    "ajax": 'json/',
 	    "lengthMenu": [[50, 100, 150, -1], [50, 100, 150, "All"]],
 	    "paging":   true,
 	    "ordering": true,
@@ -71,7 +90,18 @@
         "columnDefs": [
           { "type": "num-fmt", "targets": 2 },
           { "type": "date", "targets": 3 },
-        ]
+        ],
+        "aoColumns": [
+		    null,
+		    null,
+		    null,
+		    null,
+		    { "sClass": "hidden-xs" },
+		    { "sClass": "hidden-xs hidden-sm" },
+		    { "sClass": "hidden-xs" },
+		    { "sClass": "hidden-xs" },
+		    { "sClass": "hidden-xs" }
+		]
       });
     });
 

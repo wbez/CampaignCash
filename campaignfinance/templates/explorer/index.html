@@ -11,7 +11,7 @@
     <hr>
     <div class="row">
         <div class="col-sm-12">
-            <h2><a class="headline" href="{{mayor.get_absolute_url}}">{{mayor.name}}</a> </small><small class='timefilter recent active'>CONTRIBUTIONS SINCE LAST ELECTION</small> | <small class='timefilter all'>ALL CONTRIBUTIONS</small></h2>
+            <h2><a class="headline" href="{{mayor.get_absolute_url}}">{{mayor.name}}</a><br><small class='timefilter recent active'>SINCE LAST ELECTION</small> | <small class='timefilter all'>ALL CONTRIBUTIONS</small></h2>
             <small><i class="fa fa-check"></i> = Incumbent</small>
             {% with mayor as race %}
             {% include 'explorer/candidate_template_recent.html' %} 

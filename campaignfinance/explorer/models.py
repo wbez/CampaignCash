@@ -88,10 +88,16 @@ class AppCandidate(models.Model):
 		total = Receipts.objects.filter(committeeid__candidate=self.id,rcvdate__gte=date(2011, 2, 22)).values('amount').aggregate(Sum('amount'))
 		return total['amount__sum']
 
+	def _get_committee_totals(self):
+		"Returns the sum of contributions for this candidate"
+		committee_list = Receipts.objects.filter(committeeid__candidate=self.id).values('cmtename').annotate(cmtename_sum=Sum('amount')).order_by('-cmtename_sum')
+		return committee_list
+
 	sum_contributions = property(_get_all_contributions)
 	employer_list = property(_get_top_employers)
 	donor_list = property(_get_top_donors)
 	recent_contributions = property(_get_recent_contributions)
+	committee_list = property(_get_committee_totals)
 
 	def __unicode__(self):
 		return '%s %s %s' % (self.nameFirst, self.nameMiddle, self.nameLast)

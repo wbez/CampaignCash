@@ -125,4 +125,17 @@ a:hover {
 	.summary .col-sm-6 {
 		margin-bottom: 2em;
 	}
+
+	.main-table {
+		font-size: 11px;
+	}
+
+	.timefilter {
+		font-size: 14px;
+		line-height: 19.5px;
+	}
+
+	h1 {
+		font-size: 28px;
+	}
 }

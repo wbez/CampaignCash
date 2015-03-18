@@ -37,7 +37,7 @@ def datatables(request, slug):
 	for receipt in receipts:
 		amount = '$'+intcomma("{0:.2f}".format(receipt.amount))
 		date = '{dt:%b}. {dt.day}, {dt.year}'.format(dt=receipt.rcvdate)
-		row = [receipt.firstname,receipt.lastonlyname,amount,date,receipt.occupation,receipt.employer,receipt.city,receipt.state]
+		row = [receipt.firstname,receipt.lastonlyname,amount,date,receipt.cmtename,receipt.occupation,receipt.employer,receipt.city,receipt.state]
 		rows.append(row)
 	data = {'data':rows}
 	return HttpResponse(json.dumps(data), content_type="application/json") 
